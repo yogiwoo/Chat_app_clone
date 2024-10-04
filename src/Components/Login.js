@@ -3,11 +3,16 @@ import logo from "./../images/Hello-Transparent.png"
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { Link } from 'react-router-dom';
+import { useEffect, useState } from "react"
 function Register(){
+  const [userData,setUserData]=useState({})
+  useEffect(()=>{
+
+  })
   return (
     <div className='resister-container'>
         <div className='image-container'>
-          <img src={logo} alt='logi' className='login-logo'/>
+          <img src={logo} alt='login' className='login-logo'/>
         </div>
         <div className='login-box'>
             <p>Login to your account</p>
