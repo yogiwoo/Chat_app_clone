@@ -72,7 +72,29 @@ function Register(){
     </div>
   )
 }
+
+
 function Login() {
+  const [login,setLogin]=useState({mobile:"",password:""});
+  const handleChange=(e)=>{
+    const {name,value}=e.target;
+    setLogin((prevData)=>({
+      ...prevData,
+      [name]:value,
+    }))
+  }
+  const handleSubmit=async (e)=>{
+    e.preventDefault();
+    try{
+      const response=axios.post('http://localhost:5005/user/login',login);
+      const token = response.data.token;
+      localStorage.setItem('token', token);
+    //setResponse=(`success: ${response.data.message}`)
+    }
+    catch(err){
+
+    }
+  }
   return (
     <div className='login-container'>
         <div className='image-container'>
@@ -80,9 +102,27 @@ function Login() {
         </div>
         <div className='login-box'>
             <p>Login to your account</p>
-            <TextField id="standard-basic" label="Enter user name" variant="standard" />
-            <TextField id="standard-basic" label="Enter user name" variant="standard" type='password' />
-            <Button variant="outlined">Outlined</Button>
+            <form onSubmit={handleSubmit}>
+                <TextField 
+                id="email" 
+                name="email"
+                value={login.email}
+                onChange={handleChange} 
+                label="Enter user email" 
+                variant="standard" />
+
+                <TextField 
+                  id="password"
+                  name="password"
+                  value={login.password} 
+                  label="Enter Password" 
+                  onChange={handleChange}
+                  variant="standard" 
+                  type='password' 
+                />
+
+                <Button variant="outlined" type='submit'>Login</Button>
+            </form>
             <p>Dont  have an account? <Link to="/register">Register</Link></p>
         </div>
     </div>
