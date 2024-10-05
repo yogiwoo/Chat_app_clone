@@ -32,7 +32,7 @@ function Register(){
   return (
     <div className='resister-container'>
         <div className='image-container'>
-          <img src={logo} alt='logi' className='login-logo'/>
+          <img src={logo} alt='login' className='login-logo'/>
         </div>
         <div className='login-box'>
             <p>Login to your account</p>
