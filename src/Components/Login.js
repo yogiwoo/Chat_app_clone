@@ -1,14 +1,16 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState} from 'react'
 import logo from "./../images/Hello-Transparent.png"
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import { Link } from 'react-router-dom';
+import { Link ,useNavigate} from 'react-router-dom';
 import axios from 'axios';
+import { style } from 'framer-motion/client';
 
 
 function Register(){
   const [data,setData]=useState({name:"",email:"",password:""});
   const [response,setResponse]=useState('');
+  const nav=useNavigate();
   const handleChange=(e)=>{
     const {name,value}=e.target;
     setData((previousData)=>({
@@ -21,8 +23,13 @@ function Register(){
       setResponse('')
       try{
         const response=await axios.post('http://localhost:5000/user/register',data)
-        const token = response.data.token;
-        localStorage.setItem('token', token);
+        console.log("RESPONSE",response)
+        const token = response.data.user.token;
+        if(token){
+          localStorage.setItem('token', token);
+          nav('/app/welcome')
+        }
+       
         setResponse=(`success: ${response.data.message}`)
       }
       catch(e){
@@ -76,6 +83,8 @@ function Register(){
 
 function Login() {
   const [login,setLogin]=useState({mobile:"",password:""});
+  const [isCorrect,setIscorrect]=useState(false)
+  const nav=useNavigate();
   const handleChange=(e)=>{
     const {name,value}=e.target;
     setLogin((prevData)=>({
@@ -85,15 +94,20 @@ function Login() {
   }
   const handleSubmit=async (e)=>{
     e.preventDefault();
-    try{
-      const response=axios.post('http://localhost:5005/user/login',login);
-      const token = response.data.token;
-      localStorage.setItem('token', token);
-    //setResponse=(`success: ${response.data.message}`)
-    }
-    catch(err){
-
-    }
+   
+      const response=await axios.post('http://localhost:5000/user/login',login);
+     
+      if(response.data.token){
+        const token = response.data.token;
+       localStorage.setItem('token', token);
+       nav('/app/welcome')
+      }
+      if(response.data.message=="Incorrect password"){
+        console.log("*********************************")
+        setIscorrect(true);
+      }
+    
+   
   }
   return (
     <div className='login-container'>
@@ -122,6 +136,7 @@ function Login() {
                 />
 
                 <Button variant="outlined" type='submit'>Login</Button>
+                {isCorrect && <p style={{color:'red'}}>Incorrect Password</p>}
             </form>
             <p>Dont  have an account? <Link to="/register">Register</Link></p>
         </div>
