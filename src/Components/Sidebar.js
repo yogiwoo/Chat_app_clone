@@ -12,28 +12,23 @@ import { useNavigate } from "react-router-dom";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import { useSelector, useDispatch } from "react-redux";
 import { toggleTheme } from "../Features/themeSlice";
+import axios from 'axios';
+const route="http://localhost:5000"
+const userId=localStorage.getItem('_id')
 function Sidebar() {
   //const [lightTheme,setLightTheme]=useState(true)
   const lightTheme = useSelector((state) => state.themeKey);
   const dispatch = useDispatch();
-  const [conversations, setConversations] = useState([
-    {
-      name: "Test1",
-      lastMessage: "Last message 1",
-      timeStamp: "today",
-    },
-    {
-      name: "Test2",
-      lastMessage: "Last message 2",
-      timeStamp: "today",
-    },
-    {
-      name: "Test3",
-      lastMessage: "Last message 3",
-      timeStamp: "today",
-    },
-  ]);
+  const [conversations, setConversations] = useState([]);
   const navigate = useNavigate();
+
+  const fetchConvesation= async()=>{
+    try{
+      const response=await axios.get(`${route}/chat/loadChatSessions?userId=${userId}`)
+    }catch(e){
+
+    }
+  }
   return (
     <div className="sidebar-container">
       <div className={"sb-header" + (lightTheme ? "" : " dark")}>
