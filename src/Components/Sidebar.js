@@ -12,7 +12,6 @@ import { useNavigate } from "react-router-dom";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import { useSelector, useDispatch } from "react-redux";
 import { toggleTheme } from "../Features/themeSlice";
-import axios from 'axios';
 const route="http://localhost:5000"
 const userId=JSON.parse(localStorage.getItem('data'))
 function Sidebar() {
@@ -21,20 +20,24 @@ function Sidebar() {
   const dispatch = useDispatch();
   const [conversations, setConversations] = useState([]);
   const navigate = useNavigate();
+  //`${route}/chat/loadChatSessions?userId=${userId._id}`
+  useEffect(() => {
+    const fetchConversations = async () => {
+      try {
+        const response = await fetch(`${route}/chat/loadChatSessions?userId=${userId._id}`);
+        const data1=await response.json()
+        console.log("-------------->",data1.data2)
+        setConversations(data1.data2); // Assuming API returns an array of conversation objects
+      } catch (error) {
+        console.error("Error fetching conversations:", error);
+      }
+    };
+    fetchConversations();
+  }, []); 
+  useEffect(() => {
+    console.log("Updated conversations:::::::::::", conversations);
+  }, [conversations]);
 
-  const fetchConvesation= async()=>{
-    try{
-      const response=await axios.get(`${route}/chat/loadChatSessions?userId=${userId._id}`)
-      console.log('response conversations data',response)
-      setConversations(response.data.allChatList)
-    }catch(e){
-      console.log("side bar conversation error",e)
-    }
-  }
-  useEffect(()=>{
-    console.log('Updated conversations:', conversations);
-    fetchConvesation();
-  },[]);
   return (
     <div className="sidebar-container">
       <div className={"sb-header" + (lightTheme ? "" : " dark")}>
@@ -98,7 +101,7 @@ function Sidebar() {
       </div>
       <div className="sb-conversation">
         {conversations.map((cv) => {
-          return <ConversationsItem props={cv} key={cv.name} />;
+          return <ConversationsItem props={cv} key={cv.theirName} />;
         })}
       </div>
     </div>
