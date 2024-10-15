@@ -26,7 +26,7 @@ function Register(){
         console.log("RESPONSE",response)
         const token = response.data.user.token;
         if(token){
-          localStorage.setItem('token', token);
+          localStorage.setItem('data',response.data.user);
           nav('/app/welcome')
         }
        
@@ -99,7 +99,14 @@ function Login() {
      
       if(response.data.token){
         const token = response.data.token;
-       localStorage.setItem('token', token);
+        console.log("user data with token",response.data)
+        let userData={
+          _id:response.data._id,
+          "email": response.data.email,
+          "name":  response.data.name,
+          "token": response.data.token
+        }
+        localStorage.setItem('data',JSON.stringify(response.data));
        nav('/app/welcome')
       }
       if(response.data.message=="Incorrect password"){

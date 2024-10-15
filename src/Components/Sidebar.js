@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./../Components/myStyles.css";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
@@ -14,7 +14,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { toggleTheme } from "../Features/themeSlice";
 import axios from 'axios';
 const route="http://localhost:5000"
-const userId=localStorage.getItem('_id')
+const userId=JSON.parse(localStorage.getItem('data'))
 function Sidebar() {
   //const [lightTheme,setLightTheme]=useState(true)
   const lightTheme = useSelector((state) => state.themeKey);
@@ -24,11 +24,17 @@ function Sidebar() {
 
   const fetchConvesation= async()=>{
     try{
-      const response=await axios.get(`${route}/chat/loadChatSessions?userId=${userId}`)
+      const response=await axios.get(`${route}/chat/loadChatSessions?userId=${userId._id}`)
+      console.log('response conversations data',response)
+      setConversations(response.data.allChatList)
     }catch(e){
-
+      console.log("side bar conversation error",e)
     }
   }
+  useEffect(()=>{
+    console.log('Updated conversations:', conversations);
+    fetchConvesation();
+  },[]);
   return (
     <div className="sidebar-container">
       <div className={"sb-header" + (lightTheme ? "" : " dark")}>
@@ -98,5 +104,4 @@ function Sidebar() {
     </div>
   );
 }
-
 export default Sidebar;
