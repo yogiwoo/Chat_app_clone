@@ -14,13 +14,15 @@ import { useSelector, useDispatch } from "react-redux";
 import { toggleTheme } from "../Features/themeSlice";
 const route="http://localhost:5000"
 const userId=JSON.parse(localStorage.getItem('data'))
+
+
 function Sidebar() {
-  //const [lightTheme,setLightTheme]=useState(true)
   const lightTheme = useSelector((state) => state.themeKey);
   const dispatch = useDispatch();
+
   const [conversations, setConversations] = useState([]);
+  
   const navigate = useNavigate();
-  //`${route}/chat/loadChatSessions?userId=${userId._id}`
   useEffect(() => {
     const fetchConversations = async () => {
       try {
@@ -34,12 +36,15 @@ function Sidebar() {
     };
     fetchConversations();
   }, []); 
+
   useEffect(() => {
-    console.log("Updated conversations:::::::::::", conversations);
+    if(conversations.length>0)
+      console.log("Updated conversations:::::::::::", conversations);
   }, [conversations]);
 
   return (
     <div className="sidebar-container">
+      {console.log("*************************",conversations)}
       <div className={"sb-header" + (lightTheme ? "" : " dark")}>
         <div>
           <IconButton>
@@ -100,7 +105,7 @@ function Sidebar() {
         <input placeholder="Search" className="searchBox" />
       </div>
       <div className="sb-conversation">
-        {conversations.map((cv) => {
+        {conversations?.map((cv) => {
           return <ConversationsItem props={cv} key={cv.theirName} />;
         })}
       </div>

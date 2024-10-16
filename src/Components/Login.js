@@ -10,7 +10,9 @@ import { style } from 'framer-motion/client';
 function Register(){
   const [data,setData]=useState({name:"",email:"",password:""});
   const [response,setResponse]=useState('');
+
   const nav=useNavigate();
+
   const handleChange=(e)=>{
     const {name,value}=e.target;
     setData((previousData)=>({
@@ -18,6 +20,7 @@ function Register(){
       [name]:value,
     }))
   }
+  
   const handleSubmit=async (e)=>{
       e.preventDefault();
       setResponse('')
